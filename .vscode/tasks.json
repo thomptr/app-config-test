@@ -1,0 +1,48 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "java",
+            "label": "Spring Boot: Run Azure Profile",
+            "mainClass": "com.example.azureappconfigdemo.AzureAppConfigDemoWithAzureApplication",
+            "projectName": "azure-app-config-demo",
+            "args": "",
+            "vmArgs": "-Dspring.profiles.active=azure",
+            "envFile": "${workspaceFolder}/.env",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "type": "java", 
+            "label": "Spring Boot: Run Local Profile",
+            "mainClass": "com.example.azureappconfigdemo.AzureAppConfigDemoApplication",
+            "projectName": "azure-app-config-demo",
+            "args": "",
+            "vmArgs": "-Dspring.profiles.active=default",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": []
+        }
+    ]
+}

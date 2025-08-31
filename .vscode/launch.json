@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot - Local (No Azure)",
+            "request": "launch",
+            "mainClass": "com.example.azureappconfigdemo.AzureAppConfigDemoApplication",
+            "projectName": "azure-app-config-demo",
+            "args": "",
+            "env": {
+                "AZURE_APP_CONFIG_ENABLED": "false"
+            },
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot - With Azure App Config",
+            "request": "launch",
+            "mainClass": "com.example.azureappconfigdemo.AzureAppConfigDemoApplication",
+            "projectName": "azure-app-config-demo",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "console": "integratedTerminal"
+        }
+    ]
+}

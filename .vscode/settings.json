@@ -1,0 +1,12 @@
+{
+    "spring-boot.ls.problem.application-properties.enabled": true,
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "spring-boot.ls.java.home": null,
+    "java.debug.settings.enableRunDebugCodeLens": true,
+    "spring-boot.ls.java.vmargs": "-Dspring.profiles.active=azure",
+    "files.associations": {
+        "*.env": "properties"
+    },
+    "java.debug.settings.console": "internalConsole",
+    "spring-boot.ls.java.heap": "2048m"
+}
