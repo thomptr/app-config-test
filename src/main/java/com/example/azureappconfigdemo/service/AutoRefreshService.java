@@ -21,19 +21,19 @@ public class AutoRefreshService {
         this.refreshEndpoint = refreshEndpoint;
     }
 
-    @Scheduled(fixedDelay = 5000) // Check every 5 seconds
-    public void autoRefresh() {
-        try {
-            logger.debug("🔍 Checking for configuration changes...");
-            Collection<String> refreshedKeys = refreshEndpoint.refresh();
+    // @Scheduled(fixedDelay = 5000) // Check every 5 seconds
+    // public void autoRefresh() {
+    //     try {
+    //         logger.debug("🔍 Checking for configuration changes...");
+    //         Collection<String> refreshedKeys = refreshEndpoint.refresh();
             
-            if (!refreshedKeys.isEmpty()) {
-                logger.info("🔄 Auto-refresh detected changes in keys: {}", refreshedKeys);
-            } else {
-                logger.debug("✅ No configuration changes detected");
-            }
-        } catch (Exception e) {
-            logger.warn("⚠️ Error during auto-refresh: {}", e.getMessage());
-        }
-    }
+    //         if (!refreshedKeys.isEmpty()) {
+    //             logger.info("🔄 Auto-refresh detected changes in keys: {}", refreshedKeys);
+    //         } else {
+    //             logger.debug("✅ No configuration changes detected");
+    //         }
+    //     } catch (Exception e) {
+    //         logger.warn("⚠️ Error during auto-refresh: {}", e.getMessage());
+    //     }
+    // }
 }

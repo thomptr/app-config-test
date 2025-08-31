@@ -1,14 +1,14 @@
 # Azure App Configuration Demo
 
-A Spring Boot application demonstrating dynamic configuration management using Azure App Configuration service.
+A Spring Boot application testing dynamic configuration management using Azure App Configuration service.
 
 ## Features
 
 - REST API endpoints to retrieve dynamic configuration values
-- Automatic refresh of configuration without application restart
+- Attempting Automatic refresh of configuration without application restart
 - Integration with Spring Cloud Azure
 - Health check endpoints
-- Support for feature flags
+- Support for feature flags - requires http requests to trigger refresh
 
 ## Prerequisites
 
@@ -42,8 +42,8 @@ You can add these through Azure portal or using Azure CLI:
 
 ```bash
 # Add configuration values
-az appconfig kv set --name myAppConfigStore --key "app.message" --value "Hello from Azure App Configuration!"
-az appconfig kv set --name myAppConfigStore --key "app.feature.enabled" --value "true"
+az appconfig kv set --name myAppConfigStore --key "/application/app.message" --value "Hello from Azure App Configuration!"
+az appconfig kv set --name myAppConfigStore --key "/application/app.feature.enabled" --value "true"
 ```
 
 ### 3. Get Connection Details
@@ -81,34 +81,6 @@ Then update `application.properties` to use connection string instead of endpoin
 spring.cloud.azure.appconfiguration.stores[0].connection-string=${AZURE_APP_CONFIG_CONNECTION_STRING}
 ```
 
-### Option 3: Using Azure Managed Identity
-
-For production environments, configure managed identity:
-
-```properties
-spring.cloud.azure.appconfiguration.stores[0].endpoint=${AZURE_APP_CONFIG_ENDPOINT}
-spring.cloud.azure.credential.managed-identity-enabled=true
-```
-
-## Running the Application
-
-1. **Build the application:**
-   ```bash
-   mvn clean compile
-   ```
-
-2. **Run the application:**
-   ```bash
-   mvn spring-boot:run
-   ```
-
-3. **Or run with custom profile:**
-   ```bash
-   mvn spring-boot:run -Dspring-boot.run.profiles=dev
-   ```
-
-## API Endpoints
-
 ### Get Configuration Message
 
 ```bash
@@ -125,37 +97,34 @@ Response:
 }
 ```
 
-### Health Check
-
-```bash
-GET http://localhost:8080/api/health
-```
-
-### Actuator Endpoints
-
-- Health: `GET http://localhost:8080/actuator/health`
-- Refresh: `POST http://localhost:8080/actuator/refresh`
-
-## Dynamic Configuration Updates
-
-The application automatically refreshes configuration every 30 seconds when the monitored keys change in Azure App Configuration.
-
-To manually trigger a refresh:
-
-```bash
-curl -X POST http://localhost:8080/actuator/refresh
-```
 
 ## Testing Dynamic Updates
+
+The logConfigMessage() in the ConfigLoggerService.java logs the AppConfigProperties.java every 3 seconds.  Auto polling of the Azure App Config should detect property changes and inform the app to refresh the @RefreshScope AppConfigProperties Bean.  This should be reflecting in the logging if successful.  This is attempting to update the properties of a spring bean without a manual refresh of spring beans or any other http request.
 
 1. **Start the application**
 2. **Call the API:** `curl http://localhost:8080/api/message`
 3. **Update the value in Azure App Configuration:**
    ```bash
-   az appconfig kv set --name myAppConfigStore --key "app.message" --value "Updated message from Azure!"
+   az appconfig kv set --name app-config-test-resource1 --key "/application/app.message" --value "Updated message from Azure!"
    ```
-4. **Wait 30 seconds or trigger manual refresh**
-5. **Call the API again** to see the updated value
+4. **Call the API again** to see the updated value
+
+# Issue With Dynamic Updates with Polling
+
+The auto-refresh from polling to Azure App Config is not working.  This means the app is not polling the Azure App Config every second for property updates with this : `spring.cloud.azure.appconfiguration.stores[0].monitoring.refresh-interval=1s`
+
+Wireshark monitoring indicates there's no network traffic every second which indicates the polling every 1s specified in the monitoring.refresh-interval is not occurring :
+
+![Wireshark monitoring](wireshark-azure-app-config-polling.png)
+
+## Work around solution for auto-refresh
+
+- Use Azure Event Hub for a push model
+- Just restart the app to pickup the latest property value from Azure App Config
+- The AutoRefreshService.java presents another alternative but refreshing spring beans like this could impact performance.
+
+
 
 ## Environment-Specific Configuration
 
@@ -163,8 +132,8 @@ Use labels in Azure App Configuration for environment-specific values:
 
 ```bash
 # Add environment-specific values
-az appconfig kv set --name myAppConfigStore --key "app.message" --value "Development message" --label "dev"
-az appconfig kv set --name myAppConfigStore --key "app.message" --value "Production message" --label "prod"
+az appconfig kv set --name myAppConfigStore --key "/application/app.message" --value "Development message" --label "dev"
+az appconfig kv set --name myAppConfigStore --key "/application/app.message" --value "Production message" --label "prod"
 
 # Create keys with the default /application/ prefix
 az appconfig kv set --name app-config-test-resource1 --key "/application/app.message" --value "Hello from Azure App Configuration!" --yes
@@ -179,62 +148,5 @@ az appconfig kv set --name app-config-test-resource1 --key "/application/app.env
 az appconfig kv set --name app-config-test-resource1 --key "sentinel" --value "1" --yes
 ```
 
-Then set the environment variable:
-```bash
-export AZURE_APP_CONFIG_LABEL="dev"
-```
 
-## Troubleshooting
 
-### Common Issues
-
-1. **Connection Issues:**
-   - Verify your endpoint URL is correct
-   - Check network connectivity to Azure
-   - Ensure proper authentication is configured
-
-2. **Authentication Issues:**
-   - Verify connection string or managed identity setup
-   - Check Azure App Configuration access policies
-
-3. **Configuration Not Refreshing:**
-   - Verify monitoring is enabled
-   - Check that the trigger key matches your configuration
-   - Review application logs for refresh events
-
-### Enable Debug Logging
-
-Add to `application.properties`:
-
-```properties
-logging.level.com.azure.spring.cloud.appconfiguration=DEBUG
-logging.level.org.springframework.cloud.context.refresh=DEBUG
-```
-
-## Project Structure
-
-```
-src/
-├── main/
-│   ├── java/com/example/azureappconfigdemo/
-│   │   ├── AzureAppConfigDemoApplication.java    # Main application class
-│   │   ├── config/
-│   │   │   └── AppConfigConfiguration.java       # App Config setup
-│   │   └── controller/
-│   │       └── ConfigController.java             # REST controller
-│   └── resources/
-│       └── application.properties                # Configuration file
-└── test/ (test files would go here)
-```
-
-## Dependencies
-
-- Spring Boot 3.2.0
-- Spring Cloud Azure 5.8.0
-- Spring Boot Starter Web
-- Spring Boot Starter Actuator
-- Azure App Configuration libraries
-
-## License
-
-This project is licensed under the MIT License.
