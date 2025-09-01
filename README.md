@@ -121,7 +121,7 @@ The logConfigMessage() in the ConfigLoggerService.java logs the AppConfigPropert
 
 The auto-refresh from polling to Azure App Config is not working.  This means the app is not polling the Azure App Config every second for property updates with this : `spring.cloud.azure.appconfiguration.stores[0].monitoring.refresh-interval=2s`
 
-Wireshark monitoring indicates there's no network traffic every second which indicates the polling every 2s specified in the monitoring.refresh-interval is not occurring :
+Wireshark monitoring indicates there's no network traffic every 2 seconds which indicates the polling every 2s specified in the monitoring.refresh-interval is not occurring :
 
 ![Wireshark monitoring](wireshark-azure-app-config-polling.png)
 
