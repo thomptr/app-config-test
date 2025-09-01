@@ -100,6 +100,9 @@ Response:
 
 ## Testing Dynamic Updates
 
+See https://microsoft.github.io/spring-cloud-azure/docs/azure-app-configuration/2.6.0/reference/html/index.html#pull-based-refresh
+
+
 The logConfigMessage() in the ConfigLoggerService.java logs the AppConfigProperties.java every 3 seconds.  Auto polling of the Azure App Config should detect property changes and inform the app to refresh the @RefreshScope AppConfigProperties Bean.  This should be reflecting in the logging if successful.  This is attempting to update the properties of a spring bean without a manual refresh of spring beans or any other http request.
 
 1. **Start the application**
@@ -112,9 +115,9 @@ The logConfigMessage() in the ConfigLoggerService.java logs the AppConfigPropert
 
 # Issue With Dynamic Updates with Polling
 
-The auto-refresh from polling to Azure App Config is not working.  This means the app is not polling the Azure App Config every second for property updates with this : `spring.cloud.azure.appconfiguration.stores[0].monitoring.refresh-interval=1s`
+The auto-refresh from polling to Azure App Config is not working.  This means the app is not polling the Azure App Config every second for property updates with this : `spring.cloud.azure.appconfiguration.stores[0].monitoring.refresh-interval=2s`
 
-Wireshark monitoring indicates there's no network traffic every second which indicates the polling every 1s specified in the monitoring.refresh-interval is not occurring :
+Wireshark monitoring indicates there's no network traffic every second which indicates the polling every 2s specified in the monitoring.refresh-interval is not occurring :
 
 ![Wireshark monitoring](wireshark-azure-app-config-polling.png)
 
