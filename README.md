@@ -111,7 +111,11 @@ The logConfigMessage() in the ConfigLoggerService.java logs the AppConfigPropert
    ```bash
    az appconfig kv set --name app-config-test-resource1 --key "/application/app.message" --value "Updated message from Azure!"
    ```
-4. **Call the API again** to see the updated value
+4. **Update the trigger value** 
+```bash
+  az appconfig kv set --name app-config-test-resource1 --key "sentinel" --value "16"
+  ```
+4. **Check logs** to see the updated value.  **This is not working**
 
 # Issue With Dynamic Updates with Polling
 
