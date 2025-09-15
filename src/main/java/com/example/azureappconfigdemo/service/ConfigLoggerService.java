@@ -25,17 +25,17 @@ public class ConfigLoggerService {
         this.appConfigProperties = appConfigProperties;
     }
 
-    @Scheduled(fixedDelay = 3000) // Log every 3 seconds
-    public void logConfigMessage() {
-        String timestamp = LocalDateTime.now().format(formatter);
-        String currentMessage = appConfigProperties.getMessage();
-        String currentVersion = appConfigProperties.getVersion();
-        String currentEnvironment = appConfigProperties.getEnvironment();
+    // @Scheduled(fixedDelay = 3000) // Log every 3 seconds
+    // public void logConfigMessage() {
+    //     String timestamp = LocalDateTime.now().format(formatter);
+    //     String currentMessage = appConfigProperties.getMessage();
+    //     String currentVersion = appConfigProperties.getVersion();
+    //     String currentEnvironment = appConfigProperties.getEnvironment();
         
-        logger.info("⏰ {} | 📧 Message: \"{}\" | 📦 Version: {} | 🌍 Environment: {}", 
-                   timestamp, 
-                   currentMessage, 
-                   currentVersion, 
-                   currentEnvironment);
-    }
+    //     logger.info("⏰ {} | 📧 Message: \"{}\" | 📦 Version: {} | 🌍 Environment: {}", 
+    //                timestamp, 
+    //                currentMessage, 
+    //                currentVersion, 
+    //                currentEnvironment);
+    // }
 }

@@ -25,9 +25,7 @@ public class AppConfigProperties {
     
     @Autowired
     private FeatureFlagService featureFlagService;
-    
-
-    
+       
     @Value("${app.version:1.0.0}")
     private String version;
     
@@ -74,8 +72,6 @@ public class AppConfigProperties {
         this.featureEnabledMessage = featureEnabledMessage;
     }
 
-
-
     public String getVersion() {
         return version;
     }
@@ -95,6 +91,7 @@ public class AppConfigProperties {
     @Override
     public String toString() {
         return "AppConfigProperties{" +
+                "baseMessage='" + baseMessage + '\'' +
                 "message='" + getMessage() + '\'' +
                 ", version='" + version + '\'' +
                 ", environment='" + environment + '\'' +

@@ -8,5 +8,6 @@
         "*.env": "properties"
     },
     "java.debug.settings.console": "internalConsole",
-    "spring-boot.ls.java.heap": "2048m"
+    "spring-boot.ls.java.heap": "2048m",
+    "java.compile.nullAnalysis.mode": "automatic"
 }
